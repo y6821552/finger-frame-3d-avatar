@@ -1,0 +1,26 @@
+name: Feature request
+description: 提议一个有明确用户价值的改进
+title: "[Feature]: "
+labels: [enhancement, needs-triage]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 用户问题
+      description: 当前什么场景无法完成？
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建议方案
+      description: 描述期望行为和最小验收标准。
+    validations:
+      required: true
+  - type: textarea
+    id: privacy
+    attributes:
+      label: 隐私与兼容性影响
+      description: 是否涉及摄像头数据、网络请求、浏览器或设备差异？
+    validations:
+      required: true

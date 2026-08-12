@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using these metadata."
+title: "Finger Frame 3D Avatar"
+type: software
+authors:
+  - alias: "y6821552"
+repository-code: "https://github.com/y6821552/finger-frame-3d-avatar"
+url: "https://finger-frame-3d-avatar.y6821552.chatgpt.site"
+version: 1.0.0
+date-released: 2026-08-12
+license: MIT
+keywords:
+  - browser motion capture
+  - face tracking
+  - hand tracking
+  - Three.js
+  - MediaPipe
