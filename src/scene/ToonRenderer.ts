@@ -1,4 +1,5 @@
 import type { AvatarRole } from '../avatar/roles';
+import { CAMERA_VISIBLE_HEIGHT, CAMERA_VISIBLE_WIDTH } from '../motion/avatarFitCalibration';
 import type { AvatarPose } from '../motion/types';
 import type { Size } from '../tracking/types';
 
@@ -52,8 +53,8 @@ export class ToonRenderer {
 
 function drawBust(context: CanvasRenderingContext2D, role: AvatarRole, pose: AvatarPose, size: Size): void {
   const unit = Math.min(size.width, size.height);
-  const centerX = size.width / 2 + pose.anchorX * unit * 0.18;
-  const headY = size.height * 0.39 - pose.anchorY * unit * 0.18;
+  const centerX = size.width * (0.5 + pose.anchorX / CAMERA_VISIBLE_WIDTH);
+  const headY = size.height * (0.5 - pose.anchorY / CAMERA_VISIBLE_HEIGHT);
   context.save();
   context.translate(centerX, headY);
   context.scale(pose.avatarScale, pose.avatarScale);

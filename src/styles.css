@@ -63,24 +63,67 @@ button {
 #controls {
   position: fixed;
   z-index: 4;
-  right: auto;
-  bottom: max(16px, env(safe-area-inset-bottom));
-  left: 50%;
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
+  bottom: auto;
+  left: auto;
   display: block;
-  width: min(800px, calc(100% - 32px));
-  transform: translateX(-50%);
+  width: auto;
+  transform: none;
   pointer-events: auto;
 }
 
 .control-panel {
-  width: min(800px, 100%);
+  width: auto;
+  pointer-events: auto;
+}
+
+.controls-trigger {
+  display: grid;
+  width: 48px;
+  min-width: 48px;
+  height: 48px;
   padding: 14px;
   border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 22px;
+  border-radius: 15px;
+  place-items: center;
+  color: #e8f8ff;
   background: rgba(17, 17, 25, 0.76);
-  box-shadow: 0 18px 70px rgba(0, 0, 0, 0.36);
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(22px) saturate(1.25);
-  pointer-events: auto;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.controls-trigger:hover,
+.controls-trigger[aria-expanded='true'] {
+  border-color: rgba(169, 230, 255, 0.58);
+  background: rgba(31, 34, 47, 0.9);
+}
+
+.controls-trigger:focus-visible {
+  outline: 3px solid rgba(169, 230, 255, 0.72);
+  outline-offset: 3px;
+}
+
+.controls-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: min(420px, calc(100vw - 24px));
+  max-height: calc(100vh - 76px - env(safe-area-inset-top, 0px));
+  padding: 14px;
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  background: rgba(17, 17, 25, 0.88);
+  box-shadow: 0 18px 70px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(22px) saturate(1.25);
+  overscroll-behavior: contain;
+}
+
+.controls-popover[hidden] {
+  display: none;
 }
 
 .control-head,
@@ -286,13 +329,21 @@ select,
 
 @media (max-width: 640px) {
   #controls {
-    right: auto;
-    bottom: max(8px, env(safe-area-inset-bottom));
-    left: 50%;
-    width: calc(100% - 16px);
+    top: max(8px, env(safe-area-inset-top));
+    right: max(8px, env(safe-area-inset-right));
   }
 
-  .control-panel {
+  .controls-trigger {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    border-radius: 14px;
+  }
+
+  .controls-popover {
+    top: calc(100% + 6px);
+    width: min(380px, calc(100vw - 16px));
+    max-height: calc(100vh - 66px - env(safe-area-inset-top, 0px));
     padding: 10px;
     border-radius: 18px;
   }
@@ -330,33 +381,19 @@ select,
     font-size: 12px;
   }
 
+  .control-row[data-group='age'] {
+    grid-auto-flow: row;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .quality-label {
     font-size: 0;
   }
 }
 
 @media (max-height: 560px) {
-  .control-head {
-    display: none;
-  }
-
-  .control-panel {
-    width: min(940px, 100%);
-  }
-
-  .control-row {
-    display: inline-grid;
-    width: calc(50% - 5px);
-    vertical-align: top;
-  }
-
-  .control-footer {
-    position: absolute;
-    right: 14px;
-    bottom: calc(100% + 8px);
-    padding: 5px;
-    border-radius: 12px;
-    background: rgba(10, 10, 16, 0.72);
+  .controls-popover {
+    max-height: calc(100vh - 64px - env(safe-area-inset-top, 0px));
   }
 }
 

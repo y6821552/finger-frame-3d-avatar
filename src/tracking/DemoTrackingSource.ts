@@ -21,15 +21,20 @@ export class DemoTrackingSource implements TrackingSource {
     const yaw = Math.sin(seconds * 0.8) * 0.28;
     const cosine = Math.cos(yaw);
     const sine = Math.sin(yaw);
+    const faceLandmarks = Array.from({ length: 478 }, (_, index) => ({
+      x: 0.5 + Math.cos(index * 0.17) * 0.12 + drift,
+      y: 0.45 + Math.sin(index * 0.17) * 0.16,
+      z: 0,
+    }));
+    faceLandmarks[234] = { x: 0.38 + drift, y: 0.45, z: 0 };
+    faceLandmarks[454] = { x: 0.62 + drift, y: 0.45, z: 0 };
+    faceLandmarks[10] = { x: 0.5 + drift, y: 0.29, z: 0 };
+    faceLandmarks[152] = { x: 0.5 + drift, y: 0.61, z: 0 };
     return {
       timestampMs: nowMs,
       hands: [demoHand('Left', 0.22 + drift, seconds), demoHand('Right', 0.78 + drift, seconds)],
       face: {
-        landmarks: Array.from({ length: 478 }, (_, index) => ({
-          x: 0.5 + Math.cos(index * 0.17) * 0.12 + drift,
-          y: 0.34 + Math.sin(index * 0.17) * 0.16,
-          z: 0,
-        })),
+        landmarks: faceLandmarks,
         blendshapes: {
           eyeBlinkLeft: blink,
           eyeBlinkRight: blink * 0.96,

@@ -98,14 +98,38 @@ describe('MotionMapper', () => {
   it('anchors and scales the avatar to the mirrored face and shoulders', () => {
     const pose = new MotionMapper().update(snapshot({
       blendshapes: {},
-      faceBox: { left: 0.15, right: 0.35, top: 0.2, bottom: 0.4 },
+      faceBox: { left: 0.15, right: 0.35, top: 0.2, bottom: 0.5 },
       shoulders: { left: [0.1, 0.55], right: [0.5, 0.55] },
     }), 0, true);
 
     expect(pose.anchorX).toBeGreaterThan(0);
     expect(pose.anchorY).toBeGreaterThan(0);
-    expect(pose.avatarScale).toBeGreaterThan(0.75);
-    expect(pose.avatarScale).toBeLessThan(0.9);
+    expect(pose.avatarScale).toBeGreaterThan(0.45);
+    expect(pose.avatarScale).toBeLessThan(0.6);
+  });
+
+  it('centers an equal-size avatar on a centered frontal face', () => {
+    const pose = new MotionMapper().update(snapshot({
+      blendshapes: {},
+      faceBox: { left: 0.35, right: 0.65, top: 0.24, bottom: 0.66 },
+    }), 0);
+
+    expect(pose.anchorX).toBeCloseTo(0, 5);
+    expect(pose.anchorY).toBeCloseTo(0.14, 1);
+    expect(pose.avatarScale).toBeGreaterThan(0.4);
+    expect(pose.avatarScale).toBeLessThan(0.7);
+  });
+
+  it('maps mirrored and rear-camera horizontal centers in opposite directions', () => {
+    const input = snapshot({
+      blendshapes: {},
+      faceBox: { left: 0.15, right: 0.35, top: 0.3, bottom: 0.6 },
+    });
+    const front = new MotionMapper().update(input, 0, true);
+    const rear = new MotionMapper().update(input, 0, false);
+
+    expect(front.anchorX).toBeCloseTo(-rear.anchorX, 5);
+    expect(front.anchorX).toBeGreaterThan(0);
   });
 
   it('uses face size as the primary distance signal when shoulders are also tracked', () => {
@@ -120,9 +144,9 @@ describe('MotionMapper', () => {
       shoulders: { left: [0.32, 0.58], right: [0.68, 0.58] },
     }), 0);
 
-    expect(farPose.avatarScale).toBeLessThan(0.75);
-    expect(nearPose.avatarScale).toBeGreaterThan(farPose.avatarScale + 0.35);
-    expect(nearPose.avatarScale).toBeLessThanOrEqual(1.2);
+    expect(farPose.avatarScale).toBeLessThan(0.5);
+    expect(nearPose.avatarScale).toBeGreaterThan(farPose.avatarScale + 0.1);
+    expect(nearPose.avatarScale).toBeLessThanOrEqual(1.15);
   });
 
   it('inverts horizontal face motion only for a mirrored front camera', () => {
