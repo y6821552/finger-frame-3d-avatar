@@ -5,7 +5,7 @@ type: software
 authors:
   - alias: "y6821552"
 repository-code: "https://github.com/y6821552/finger-frame-3d-avatar"
-url: "https://finger-frame-3d-avatar.y6821552.chatgpt.site"
+url: "https://y6821552.github.io/finger-frame-3d-avatar/"
 version: 1.0.0
 date-released: 2026-08-12
 license: MIT

@@ -1,6 +1,7 @@
 # Finger Frame 3D Avatar
 
 [![CI](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/ci.yml/badge.svg)](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/ci.yml)
+[![Deploy GitHub Pages](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/pages.yml/badge.svg)](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: early stage](https://img.shields.io/badge/status-early--stage-orange.svg)](ROADMAP.md)
 
@@ -12,9 +13,9 @@
 
 ## 在线体验
 
-[打开在线版本](https://finger-frame-3d-avatar.y6821552.chatgpt.site)
+[打开 GitHub Pages 在线版本](https://y6821552.github.io/finger-frame-3d-avatar/)
 
-> 在线版本当前仅对项目所有者开放。摄像头需要 HTTPS 或 localhost 环境。
+> 在线版本公开访问，无需 ChatGPT 登录。首次启动需加载本地部署的 MediaPipe 运行资产，并允许浏览器使用摄像头。
 
 ## 功能
 
