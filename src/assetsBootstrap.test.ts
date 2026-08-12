@@ -5,9 +5,14 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
 
-import { prepareRuntimeAssets } from '../scripts/prepare-runtime-assets.mjs';
+import { MODELS, prepareRuntimeAssets } from '../scripts/prepare-runtime-assets.mjs';
 
 describe('runtime asset bootstrap', () => {
+  it('uses the published MediaPipe Lite pose model URL', () => {
+    const pose = MODELS.find((model) => model.filename === 'pose_landmarker_lite.task');
+    expect(pose?.url).toMatch(/\/pose_landmarker_lite\.task$/);
+  });
+
   it('downloads verified models, copies packaged WASM, and reuses valid files', async () => {
     const rootDir = await mkdtemp(join(tmpdir(), 'finger-frame-assets-'));
     const wasmSourceDir = join(rootDir, 'package-wasm');
