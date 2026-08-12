@@ -15,8 +15,6 @@
 
 [打开 GitHub Pages 在线版本](https://y6821552.github.io/finger-frame-3d-avatar/)
 
-> 在线版本公开访问，无需 ChatGPT 登录。首次启动需加载本地部署的 MediaPipe 运行资产，并允许浏览器使用摄像头。
-
 ## 功能
 
 - 双手 L 形手势检测、取景框平滑、瞬移抑制和短时丢失保持；
