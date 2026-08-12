@@ -1,7 +1,7 @@
 {
   "name": "finger-frame-3d-avatar",
   "version": "1.0.0",
-  "description": "Real-time browser finger-frame AR with locally driven cartoon avatars",
+  "description": "Privacy-first real-time webcam cartoon avatar with MediaPipe face, hand and upper-body tracking",
   "private": true,
   "license": "MIT",
   "type": "module",
@@ -12,12 +12,18 @@
     "url": "https://github.com/y6821552/finger-frame-3d-avatar.git"
   },
   "keywords": [
-    "mediapipe",
-    "threejs",
+    "webcam",
+    "camera-filter",
+    "cartoon-avatar",
     "face-tracking",
     "hand-tracking",
-    "webgl",
-    "avatar",
+    "motion-capture",
+    "mediapipe",
+    "threejs",
+    "web-ar",
+    "vrm",
+    "privacy-first",
+    "typescript",
     "augmented-reality"
   ],
   "engines": {
