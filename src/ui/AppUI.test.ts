@@ -10,6 +10,50 @@ function storage(saved: string | null = null) {
 }
 
 describe('AppUI', () => {
+  it('starts collapsed and toggles an accessible controls popover', () => {
+    const container = document.createElement('div');
+    new AppUI(container, storage());
+    const trigger = container.querySelector<HTMLButtonElement>('[data-action="controls"]')!;
+    const popover = container.querySelector<HTMLElement>('[data-controls-popover]')!;
+
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(popover.hasAttribute('hidden')).toBe(true);
+    trigger.click();
+    expect(trigger.getAttribute('aria-expanded')).toBe('true');
+    expect(popover.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('collapses after a selection and reopens for errors', () => {
+    const container = document.createElement('div');
+    const ui = new AppUI(container, storage());
+    container.querySelector<HTMLButtonElement>('[data-action="controls"]')!.click();
+    container.querySelector<HTMLButtonElement>('[data-age="child"]')!.click();
+    expect(container.querySelector('[data-controls-popover]')?.hasAttribute('hidden')).toBe(true);
+
+    ui.setStatus('Camera failed', 'error');
+    expect(container.querySelector('[data-controls-popover]')?.hasAttribute('hidden')).toBe(false);
+  });
+
+  it('closes on Escape and outside pointer input, then removes document listeners', () => {
+    const container = document.createElement('div');
+    document.body.append(container);
+    const ui = new AppUI(container, storage());
+    const trigger = container.querySelector<HTMLButtonElement>('[data-action="controls"]')!;
+
+    trigger.click();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(trigger);
+
+    trigger.click();
+    document.body.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+    expect(trigger.getAttribute('aria-expanded')).toBe('false');
+
+    ui.destroy();
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }));
+    container.remove();
+  });
+
   it('uses Chinese by default for a Chinese browser and switches the complete panel to English', () => {
     const container = document.createElement('div');
     const store = storage();

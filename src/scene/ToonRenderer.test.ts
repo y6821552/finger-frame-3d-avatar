@@ -32,11 +32,11 @@ describe('ToonRenderer', () => {
     } as unknown as CanvasRenderingContext2D;
     const canvas = document.createElement('canvas');
     const renderer = new ToonRenderer(canvas, context);
-    const pose = { ...NEUTRAL_POSE, anchorX: 0.5, anchorY: 0.25, avatarScale: 1.35 };
+    const pose = { ...NEUTRAL_POSE, anchorX: 0.968, anchorY: 0.272, avatarScale: 0.6 };
 
-    renderer.render(canvas, roleById('adult-female'), pose, { width: 640, height: 360 }, 100);
+    renderer.render(canvas, roleById('adult-female'), pose, { width: 960, height: 540 }, 100);
 
-    expect(context.translate).toHaveBeenCalledWith(352.4, 124.2);
-    expect(context.scale).toHaveBeenCalledWith(1.35, 1.35);
+    expect(context.translate).toHaveBeenCalledWith(672, 216);
+    expect(context.scale).toHaveBeenCalledWith(0.6, 0.6);
   });
 });

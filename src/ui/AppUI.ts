@@ -20,14 +20,16 @@ const COPY = {
   zh: {
     eyebrow: '本地 3D 实时体验', title: '选择角色', starting: '启动中…',
     ageLabel: '年龄段', genderLabel: '性别', quality: '画质', camera: '↻ 切换摄像头',
-    cameraAria: '切换摄像头', auto: '自动', high: '高', medium: '中', low: '低',
+    cameraAria: '切换摄像头', settings: '角色与设置', closeSettings: '关闭角色与设置',
+    auto: '自动', high: '高', medium: '中', low: '低',
     ages: { child: '儿童', teen: '青少年', adult: '成年人', senior: '老年人' },
     genders: { male: '男', female: '女' },
   },
   en: {
     eyebrow: 'LOCAL 3D PORTAL', title: 'Choose your character', starting: 'Starting…',
     ageLabel: 'Age group', genderLabel: 'Gender', quality: 'Quality', camera: '↻ Switch camera',
-    cameraAria: 'Switch camera', auto: 'Auto', high: 'High', medium: 'Medium', low: 'Low',
+    cameraAria: 'Switch camera', settings: 'Character & settings', closeSettings: 'Close character & settings',
+    auto: 'Auto', high: 'High', medium: 'Medium', low: 'Low',
     ages: { child: 'Child', teen: 'Teen', adult: 'Adult', senior: 'Senior' },
     genders: { male: 'Male', female: 'Female' },
   },
@@ -46,6 +48,15 @@ export class AppUI {
   private statusState: 'loading' | 'ready' | 'warning' | 'error' = 'loading';
   private gestureHands = 0;
   private gestureActive = false;
+  private controlsOpen = false;
+  private readonly handleDocumentPointer = (event: Event): void => {
+    if (this.controlsOpen && event.target instanceof Node && !this.container.contains(event.target)) {
+      this.setControlsOpen(false);
+    }
+  };
+  private readonly handleDocumentKey = (event: KeyboardEvent): void => {
+    if (event.key === 'Escape' && this.controlsOpen) this.setControlsOpen(false, true);
+  };
 
   constructor(
     private readonly container: HTMLElement,
@@ -55,6 +66,8 @@ export class AppUI {
     this.selectedRole = loadSavedRole(storage);
     this.language = resolveLanguage(storage.getItem('finger-frame-language'), options.browserLanguage);
     document.documentElement.lang = this.language === 'zh' ? 'zh-CN' : 'en';
+    document.addEventListener('pointerdown', this.handleDocumentPointer);
+    document.addEventListener('keydown', this.handleDocumentKey);
     this.render();
   }
 
@@ -78,6 +91,7 @@ export class AppUI {
     this.statusState = state;
     this.status.textContent = translateStatus(message, this.language);
     this.container.dataset.state = state;
+    if (state === 'error') this.setControlsOpen(true);
   }
 
   setGestureState(handCount: number, active: boolean): void {
@@ -96,6 +110,8 @@ export class AppUI {
   }
 
   destroy(): void {
+    document.removeEventListener('pointerdown', this.handleDocumentPointer);
+    document.removeEventListener('keydown', this.handleDocumentKey);
     this.roleListeners = [];
     this.qualityListeners = [];
     this.cameraListeners = [];
@@ -106,33 +122,39 @@ export class AppUI {
     const copy = COPY[this.language];
     this.container.className = 'control-panel';
     this.container.innerHTML = `
-      <div class="control-head">
-        <div>
-          <span class="eyebrow">${copy.eyebrow}</span>
-          <strong>${copy.title}</strong>
-        </div>
-        <div class="head-actions">
-          <div class="language-switch" aria-label="Language / 语言">
-            <button type="button" data-language="zh">中文</button>
-            <button type="button" data-language="en">EN</button>
+      <button class="controls-trigger" type="button" data-action="controls"
+        aria-controls="finger-frame-controls-popover" aria-expanded="${String(this.controlsOpen)}"
+        aria-label="${this.controlsOpen ? copy.closeSettings : copy.settings}" title="${copy.settings}">⚙</button>
+      <div id="finger-frame-controls-popover" class="controls-popover" data-controls-popover
+        ${this.controlsOpen ? '' : 'hidden'}>
+        <div class="control-head">
+          <div>
+            <span class="eyebrow">${copy.eyebrow}</span>
+            <strong>${copy.title}</strong>
           </div>
-          <div class="live-status"><span class="status-dot"></span><span data-status>${copy.starting}</span></div>
+          <div class="head-actions">
+            <div class="language-switch" aria-label="Language / 语言">
+              <button type="button" data-language="zh">中文</button>
+              <button type="button" data-language="en">EN</button>
+            </div>
+            <div class="live-status"><span class="status-dot"></span><span data-status>${copy.starting}</span></div>
+          </div>
         </div>
-      </div>
-      <div class="gesture-guide" data-gesture></div>
-      <div class="control-row" data-group="age" aria-label="${copy.ageLabel}"></div>
-      <div class="control-row" data-group="gender" aria-label="${copy.genderLabel}"></div>
-      <div class="control-footer">
-        <label class="quality-label">${copy.quality}
-          <select data-control="quality">
-            <option value="auto">${copy.auto}</option>
-            <option value="high">${copy.high}</option>
-            <option value="medium">${copy.medium}</option>
-            <option value="low">${copy.low}</option>
-          </select>
-        </label>
-        <button class="icon-action" type="button" data-action="camera" aria-label="${copy.cameraAria}">${copy.camera}</button>
-        <span class="fps" data-fps>-- FPS</span>
+        <div class="gesture-guide" data-gesture></div>
+        <div class="control-row" data-group="age" aria-label="${copy.ageLabel}"></div>
+        <div class="control-row" data-group="gender" aria-label="${copy.genderLabel}"></div>
+        <div class="control-footer">
+          <label class="quality-label">${copy.quality}
+            <select data-control="quality">
+              <option value="auto">${copy.auto}</option>
+              <option value="high">${copy.high}</option>
+              <option value="medium">${copy.medium}</option>
+              <option value="low">${copy.low}</option>
+            </select>
+          </label>
+          <button class="icon-action" type="button" data-action="camera" aria-label="${copy.cameraAria}">${copy.camera}</button>
+          <span class="fps" data-fps>-- FPS</span>
+        </div>
       </div>
     `;
     this.status = requireElement(this.container, '[data-status]');
@@ -145,10 +167,14 @@ export class AppUI {
   }
 
   private installControlListeners(): void {
+    requireElement(this.container, '[data-action="controls"]').addEventListener('click', () => {
+      this.setControlsOpen(!this.controlsOpen);
+    });
     requireElement<HTMLSelectElement>(this.container, '[data-control="quality"]').addEventListener('change', (event) => {
       const mode = (event.currentTarget as HTMLSelectElement).value as QualityMode;
       this.qualityMode = mode;
       this.qualityListeners.forEach((listener) => listener(mode));
+      this.setControlsOpen(false, true);
     });
     requireElement(this.container, '[data-action="camera"]').addEventListener('click', () => {
       this.cameraListeners.forEach((listener) => listener());
@@ -161,7 +187,9 @@ export class AppUI {
         this.language = language;
         this.storage.setItem('finger-frame-language', language);
         document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
+        this.controlsOpen = false;
         this.render();
+        requireElement<HTMLButtonElement>(this.container, '[data-action="controls"]').focus();
       });
     });
   }
@@ -190,11 +218,23 @@ export class AppUI {
 
   private choose(age: AgeGroup, gender: Gender): void {
     const next = findRole(age, gender);
+    this.setControlsOpen(false, true);
     if (next.id === this.selectedRole.id) return;
     this.selectedRole = next;
     this.storage.setItem('finger-frame-role', next.id);
     this.refreshButtons();
     this.roleListeners.forEach((listener) => listener(next));
+  }
+
+  private setControlsOpen(open: boolean, restoreFocus = false): void {
+    this.controlsOpen = open;
+    const trigger = this.container.querySelector<HTMLButtonElement>('[data-action="controls"]');
+    const popover = this.container.querySelector<HTMLElement>('[data-controls-popover]');
+    if (!trigger || !popover) return;
+    trigger.setAttribute('aria-expanded', String(open));
+    trigger.setAttribute('aria-label', open ? COPY[this.language].closeSettings : COPY[this.language].settings);
+    popover.hidden = !open;
+    if (restoreFocus) trigger.focus();
   }
 
   private refreshButtons(): void {

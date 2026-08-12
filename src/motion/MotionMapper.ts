@@ -1,15 +1,21 @@
 import { Euler, Matrix4, MathUtils } from 'three';
 
 import type { TrackingSnapshot } from '../tracking/types';
+import {
+  AVATAR_HEAD_SCREEN_HEIGHT,
+  AVATAR_HEAD_SCREEN_WIDTH,
+  CAMERA_VISIBLE_HEIGHT,
+  CAMERA_VISIBLE_WIDTH,
+} from './avatarFitCalibration';
+import { measureFaceRect } from './FaceRect';
 import type { AvatarPose } from './types';
 import { NEUTRAL_POSE } from './types';
 
 const FACE_HOLD_MS = 300;
 const RECOVERY_TIME_MS = 180;
-const FACE_REFERENCE_WIDTH = 0.25;
 const SHOULDER_REFERENCE_WIDTH = 0.45;
-const MIN_AVATAR_SCALE = 0.6;
-const MAX_AVATAR_SCALE = 1.2;
+const MIN_AVATAR_SCALE = 0.35;
+const MAX_AVATAR_SCALE = 1.15;
 
 export class MotionMapper {
   private pose: AvatarPose = structuredClone(NEUTRAL_POSE);
@@ -66,15 +72,15 @@ export class MotionMapper {
         1,
       );
       target.head = matrixRotation(snapshot.face.transformationMatrix, mirrored);
-      const bounds = landmarkBounds(snapshot.face.landmarks);
-      if (bounds) {
-        const centerX = (bounds.left + bounds.right) / 2;
-        const centerY = (bounds.top + bounds.bottom) / 2;
-        const displayedX = mirrored ? 1 - centerX : centerX;
-        target.anchorX = clamp((displayedX - 0.5) * 3.4, -1.7, 1.7);
-        target.anchorY = clamp((0.34 - centerY) * 3, -0.8, 0.8);
+      const faceRect = measureFaceRect(snapshot.face.landmarks);
+      if (faceRect) {
+        const displayedX = mirrored ? 1 - faceRect.centerX : faceRect.centerX;
+        target.anchorX = clamp((displayedX - 0.5) * CAMERA_VISIBLE_WIDTH, -1.9, 1.9);
+        target.anchorY = clamp((0.5 - faceRect.centerY) * CAMERA_VISIBLE_HEIGHT, -1.05, 1.05);
+        const widthScale = faceRect.width / AVATAR_HEAD_SCREEN_WIDTH;
+        const heightScale = faceRect.height / AVATAR_HEAD_SCREEN_HEIGHT;
         faceDistanceScale = clamp(
-          (bounds.right - bounds.left) / FACE_REFERENCE_WIDTH,
+          Math.min(widthScale, heightScale) * 1.03,
           MIN_AVATAR_SCALE,
           MAX_AVATAR_SCALE,
         );
@@ -114,9 +120,7 @@ export class MotionMapper {
         MIN_AVATAR_SCALE,
         MAX_AVATAR_SCALE,
       );
-      target.avatarScale = faceDistanceScale === null
-        ? shoulderDistanceScale
-        : MathUtils.lerp(faceDistanceScale, shoulderDistanceScale, 0.2);
+      target.avatarScale = faceDistanceScale ?? shoulderDistanceScale;
       target.shoulderLift = clamp(0.55 - (leftShoulder.y + rightShoulder.y) / 2, -0.2, 0.2);
       target.poseTracked = true;
     }
@@ -133,21 +137,6 @@ function matrixRotation(values: number[] | undefined, mirrored: boolean): Avatar
     z: clamp(euler.z, -MathUtils.degToRad(25), MathUtils.degToRad(25)),
   };
   return mirrored ? { x: rotation.x, y: -rotation.y, z: -rotation.z } : rotation;
-}
-
-function landmarkBounds(landmarks: Array<{ x: number; y: number }>) {
-  if (landmarks.length === 0) return null;
-  let left = 1;
-  let right = 0;
-  let top = 1;
-  let bottom = 0;
-  for (const point of landmarks) {
-    left = Math.min(left, point.x);
-    right = Math.max(right, point.x);
-    top = Math.min(top, point.y);
-    bottom = Math.max(bottom, point.y);
-  }
-  return { left, right, top, bottom };
 }
 
 function interpolatePose(previous: AvatarPose, target: AvatarPose, amount: number): AvatarPose {
