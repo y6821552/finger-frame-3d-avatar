@@ -1,13 +1,13 @@
-# Finger Frame 3D Avatar
+# Finger Frame 3D Avatar — 手势相框实时卡通面捕
 
 [![CI](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/ci.yml/badge.svg)](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/ci.yml)
 [![Deploy GitHub Pages](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/pages.yml/badge.svg)](https://github.com/y6821552/finger-frame-3d-avatar/actions/workflows/pages.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Status: early stage](https://img.shields.io/badge/status-early--stage-orange.svg)](ROADMAP.md)
 
-基于浏览器的实时手指取景框与卡通角色面捕体验。用户用双手的食指和拇指组成取景框后，框内会显示由人脸、头部和上半身动作实时驱动的卡通角色。
+用摄像头把自己实时变成卡通角色：双手比出相框后，网页会追踪眨眼、张嘴、转头和上半身动作，让卡通角色同步表演。无需安装 App，也不需要 AI 视频生成，所有画面都在浏览器本地处理。界面默认使用中文，并支持中英文一键切换。
 
-项目完全在浏览器本地运行，不使用 AI 视频生成模型，也不会上传摄像头画面。年龄段和性别由用户手动选择。
+A privacy-first real-time webcam cartoon avatar and finger-frame camera effect powered by MediaPipe and Three.js. It supports browser-based face, hand and upper-body motion tracking, with a Chinese-first interface and instant Chinese/English switching.
 
 当前为公开发布早期版本。项目已有可运行实现、自动化验证和明确路线图，但尚不宣称已有大规模采用或稳定 API。
 
