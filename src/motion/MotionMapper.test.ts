@@ -108,7 +108,7 @@ describe('MotionMapper', () => {
     expect(pose.avatarScale).toBeLessThan(0.6);
   });
 
-  it('centers an equal-size avatar on a centered frontal face', () => {
+  it('adds an eight-percent cover margin to a centered frontal face', () => {
     const pose = new MotionMapper().update(snapshot({
       blendshapes: {},
       faceBox: { left: 0.35, right: 0.65, top: 0.24, bottom: 0.66 },
@@ -116,8 +116,7 @@ describe('MotionMapper', () => {
 
     expect(pose.anchorX).toBeCloseTo(0, 5);
     expect(pose.anchorY).toBeCloseTo(0.14, 1);
-    expect(pose.avatarScale).toBeGreaterThan(0.4);
-    expect(pose.avatarScale).toBeLessThan(0.7);
+    expect(pose.avatarScale).toBeCloseTo(0.752, 2);
   });
 
   it('maps mirrored and rear-camera horizontal centers in opposite directions', () => {
