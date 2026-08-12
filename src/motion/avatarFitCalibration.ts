@@ -2,3 +2,4 @@ export const CAMERA_VISIBLE_WIDTH = 4.84;
 export const CAMERA_VISIBLE_HEIGHT = 2.72;
 export const AVATAR_HEAD_SCREEN_WIDTH = 0.36;
 export const AVATAR_HEAD_SCREEN_HEIGHT = 0.62;
+export const AVATAR_FACE_COVER_MULTIPLIER = 1.11;

@@ -2,6 +2,7 @@ import { Euler, Matrix4, MathUtils } from 'three';
 
 import type { TrackingSnapshot } from '../tracking/types';
 import {
+  AVATAR_FACE_COVER_MULTIPLIER,
   AVATAR_HEAD_SCREEN_HEIGHT,
   AVATAR_HEAD_SCREEN_WIDTH,
   CAMERA_VISIBLE_HEIGHT,
@@ -80,7 +81,7 @@ export class MotionMapper {
         const widthScale = faceRect.width / AVATAR_HEAD_SCREEN_WIDTH;
         const heightScale = faceRect.height / AVATAR_HEAD_SCREEN_HEIGHT;
         faceDistanceScale = clamp(
-          Math.min(widthScale, heightScale) * 1.03,
+          Math.min(widthScale, heightScale) * AVATAR_FACE_COVER_MULTIPLIER,
           MIN_AVATAR_SCALE,
           MAX_AVATAR_SCALE,
         );
