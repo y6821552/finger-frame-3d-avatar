@@ -51,11 +51,11 @@
     "@sparticuz/chromium": "^149.0.0",
     "@types/node": "^26.2.0",
     "@types/three": "^0.185.4",
-    "eslint": "^10.8.1",
-    "jsdom": "^29.1.1",
-    "typescript": "^6.0.3",
+    "eslint": "^10.9.0",
+    "jsdom": "^30.0.1",
+    "typescript": "^7.0.2",
     "typescript-eslint": "^8.67.0",
-    "vite": "^8.2.1",
-    "vitest": "^4.1.10"
+    "vite": "^8.2.2",
+    "vitest": "^4.1.11"
   }
 }
