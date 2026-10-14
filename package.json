@@ -41,7 +41,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@mediapipe/tasks-vision": "^1.0.1",
+    "@mediapipe/tasks-vision": "^1.1.0",
     "@pixiv/three-vrm": "^3.5.5",
     "three": "^0.185.0"
   },
